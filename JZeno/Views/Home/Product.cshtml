@@ -1,0 +1,67 @@
+﻿@model Product
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<div class="container bg-white" style="padding:10px;">
+    <div class="row">
+        <div class="col-5">
+            <div id="demo" class="carousel slide" data-bs-ride="carousel">
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner">
+                    @{
+                        int x = 0;
+                    }
+                    @foreach (var item in Model.Image!)
+                    {
+                        x++;
+                        var active = x == 1 ? "active" : "";
+                            <div class="carousel-item @active">
+                            <img src="@("~/image/"+@item.Image)" style="width:100%; height:25vw;" asp-append-version=true />
+                            </div>
+                    }
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+        </div>
+        <div class="col-7">
+          <div class="container">
+                <h1>@Model.Name</h1>
+            <div>
+                    @foreach (var items in Model.Color!)
+                    {
+                        <button style="padding:5px; border:none;">@items.Name</button>
+                    }
+            </div>
+            <br />
+            <div class="flex-row">
+                    @foreach (var items in Model.Color!)
+                    {
+                        @foreach (var item in items.ProductSize!)
+                        {
+                                <button style="border:none; padding:5px;">@item.Size</button>
+                        }
+                    }
+            </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div>
+</div>
+<div class="container">
+    <h1>Mô Tả</h1>
+    <p style="white-space:pre-wrap">@Model.Description</p>
+</div>
+
+
+<div>
+
+</div>
