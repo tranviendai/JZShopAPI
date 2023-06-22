@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using JZeno.Data;
 using JZeno.Models;
 using System.Drawing;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using NuGet.Protocol;
 
 namespace JZeno.Controllers.API
 {
@@ -26,30 +28,32 @@ namespace JZeno.Controllers.API
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
         {
-            var products = await _context.Product.Select(e=> new
-            {
-                id = e.Id,
-                name = e.Name,
-                price = e.Price,
-                material = e.Material,
-                discount = e.DiscountPercent,
-                description = e.Description,
-                image = e.Image.Select(e => new
-                 {
-                     name = e.Image
-                 }),
-                 color = e.Color.Select(e => new
-                 {
-                     name = e.Name,
-                     size = e.ProductSize.Select(e => new
-                     {
-                         name = e.Size,
-                         quantity = e.Quantity,
-                     })
-                 }),
-                category = e.CategoryChild!.CategoryID!.ToString(),
-                categoryChild = e.CategoryChild.Name
-            }).ToListAsync();
+            var products = await _context.Product.Select(e => new
+             {
+                 Id = e.Id,
+                 Name = e.Name,
+                 Price = e.Price,
+                 Material = e.Material,
+                 Description = e.Description,
+                 discountPercent = e.DiscountPercent,
+                 Image = e.Image!.Select(e => new
+                  {
+                      Image = e.Image
+                  }),
+                  color = e.Color!.Select(f => new
+                  {  
+                      Name = f.Name,
+                      productSize = f.ProductSize!.Select(g => new
+                      {
+                          Size = g.Size,
+                          Quantity = g.Quantity,
+                      }).ToList()
+                  }),
+                 category = e.CategoryChild!.CategoryID!.ToString(),
+                 categoryChild = e.CategoryChild.Name,
+                 categoryChildID = e.CategoryChild.Id,
+             }).ToListAsync(); 
+
           if (_context.Product == null)
           {
               return NotFound();
@@ -57,14 +61,78 @@ namespace JZeno.Controllers.API
             return Ok(products);
         }
 
+        // POST: api/Products
+        [HttpPost]
+        public async Task<IActionResult> PostProduct(Product product)
+        {
+            var productIndex = _context.Product!.OrderByDescending(c => c.Index).FirstOrDefault();
+            var autoID = productIndex != null ? productIndex.Index + 1 : 1;
+            autoID += 1;
+            if (autoID == null)
+            {
+                product.Id = "JZ0001";
+            }
+            else
+            {
+                product.Id = "JZ000" + (autoID).ToString();
+                if (autoID >= 9)
+                {
+                 product.Id = "JZ00" + (autoID).ToString();
+                }
+                if (autoID >= 99)
+                {
+                    product.Id = "JZ0" + (autoID).ToString();
+                }
+                if (autoID >= 999)
+                {
+                    product.Id = "JZ" + (autoID).ToString();
+                }
+            }
+
+            Product newProduct = new Product()
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                DiscountPercent = product.DiscountPercent,
+                Description = product.Description,
+                Color = product.Color.Select(e=> new ProductColor()
+                {
+                    Name = e.Name,
+                    ProductID = product.Id,
+                    ProductSize = e.ProductSize!.Select(i => new ProductSize()
+                    {
+                        Size = i.Size,
+                        Quantity = i.Quantity,
+                        ColorID = e.Id
+                    }).ToList()
+                }).ToList(),
+                Image = product.Image!.Select(t=> new ProductImage()
+                {
+                    Image = t.Image,
+                    ProductID = product.Id
+                }).ToList(),
+                Material = product.Material,
+                postDate = DateTime.Now,
+                CategoryChildID = product.CategoryChildID
+            };
+
+            await _context.Product.AddAsync(newProduct);
+            await _context.SaveChangesAsync();
+
+            return  Ok(newProduct);
+        }
+
         // GET: api/Products/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(string id)
         {
-          if (_context.Product == null)
-          {
-              return NotFound();
-          }
+
+            if (_context.Product == null)
+            {
+                return NotFound();
+            }
+
             var product = await _context.Product.Select(e => new
             {
                 id = e.Id,
@@ -73,20 +141,20 @@ namespace JZeno.Controllers.API
                 material = e.Material,
                 discount = e.DiscountPercent,
                 description = e.Description,
-                image = e.Image.Select(e => new
+                image = e.Image.Select(e => new ProductImage()
                 {
-                    name = e.Image
+                    Image = e.Image
                 }).ToList(),
-                color = e.Color.Select(e => new
+                color = e.Color.Select(e => new ProductColor()
                 {
-                    name = e.Name,
-                    size = e.ProductSize.Select(e => new
+                    Name = e.Name,
+                    ProductSize = e.ProductSize.Select(e => new ProductSize()
                     {
-                        name = e.Size,
-                        quantity = e.Quantity,
-                    })
+                        Size = e.Size,
+                        Quantity = e.Quantity,
+                    }).ToList()
                 })
-            }).FirstOrDefaultAsync(i=>i.id == id);
+            }).FirstOrDefaultAsync(i => i.id == id);
 
             if (product == null)
             {
@@ -126,36 +194,6 @@ namespace JZeno.Controllers.API
 
             return NoContent();
         }
-
-        // POST: api/Products
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
-        {
-          if (_context.Product == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.Product'  is null.");
-          }
-            _context.Product.Add(product);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (ProductExists(product.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetProduct", new { id = product.Id }, product);
-        }
-
         // DELETE: api/Products/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(string id)

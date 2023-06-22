@@ -16,5 +16,6 @@ namespace JZeno.Models
         public int ColorID { get; set; }
 
         public ProductColor? Color { get; set; }
+
     }
 }

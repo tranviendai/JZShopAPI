@@ -17,7 +17,7 @@ namespace JZeno.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.5")
+                .HasAnnotation("ProductVersion", "7.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -260,7 +260,6 @@ namespace JZeno.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasMaxLength(74)
                         .HasColumnType("nvarchar(74)");
 
@@ -344,9 +343,9 @@ namespace JZeno.Migrations
                             Id = "a79e98b4-d8a6-4640-98eb-5b417ffb2661",
                             AccessFailedCount = 0,
                             Address = "Tắc Vân - Cà Mau",
-                            Birthday = new DateTime(2023, 6, 13, 18, 55, 57, 558, DateTimeKind.Local).AddTicks(5757),
-                            ConcurrencyStamp = "b33ae734-2939-429f-95b2-9bde4d6deaa6",
-                            DateCreated = new DateTime(2023, 6, 13, 18, 55, 57, 558, DateTimeKind.Local).AddTicks(5773),
+                            Birthday = new DateTime(2023, 6, 23, 0, 5, 37, 852, DateTimeKind.Local).AddTicks(9657),
+                            ConcurrencyStamp = "87716d43-f568-44ec-a8fc-1f39af9eb316",
+                            DateCreated = new DateTime(2023, 6, 23, 0, 5, 37, 852, DateTimeKind.Local).AddTicks(9669),
                             Email = "admin@gmail.com",
                             EmailConfirmed = true,
                             FullName = "Trần Viễn Đại",
@@ -354,10 +353,10 @@ namespace JZeno.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEcx4Az4Uw5Rv+xPhy/1VxhsB1dD12gwwdE2nd5FmynwfyPHXGmfy7i4Xd+FWsod1g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAED4UABAcQ1TneNIMBLns7mDeqORleQj379w8jLcSqwtE5GF815GtCDo+WFzhbnOB8Q==",
                             PhoneNumber = "0582072743",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "de7fbb24-760a-4ea4-bd6b-3bc007f1a7c8",
+                            SecurityStamp = "00ab1284-edd7-4793-8993-d8555f5b67ef",
                             TwoFactorEnabled = false,
                             UserName = "admin@gmail.com"
                         });
@@ -602,20 +601,16 @@ namespace JZeno.Migrations
 
             modelBuilder.Entity("JZeno.Models.ProductColor", b =>
                 {
-                    b.HasOne("JZeno.Models.Product", "Product")
+                    b.HasOne("JZeno.Models.Product", null)
                         .WithMany("Color")
                         .HasForeignKey("ProductID");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("JZeno.Models.ProductImage", b =>
                 {
-                    b.HasOne("JZeno.Models.Product", "Product")
+                    b.HasOne("JZeno.Models.Product", null)
                         .WithMany("Image")
                         .HasForeignKey("ProductID");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("JZeno.Models.ProductSize", b =>

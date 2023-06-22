@@ -23,8 +23,7 @@ namespace JZeno.Controllers.API
         {
             var categories = await _context.Category.Select(e => new
             {
-               idParent = e.Id,
-               name = e.Name
+               idParent = e.Id
             }).ToListAsync();
             if (_context.Product == null)
             {

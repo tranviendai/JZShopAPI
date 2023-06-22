@@ -10,7 +10,7 @@ namespace JZeno.Models
         public string? FullName { get; set; }
 
         [StringLength(74)]
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
         [StringLength(int.MaxValue)]
         public string? Image { get; set; }

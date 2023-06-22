@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using Newtonsoft.Json;
 
 namespace JZeno.Models
 {
@@ -11,7 +12,6 @@ namespace JZeno.Models
         public string? Id { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Index { get; set; }
-
         [StringLength(150)]
         public string? Name { get; set; }
         public DateTime? postDate { get; set; }
@@ -29,6 +29,8 @@ namespace JZeno.Models
         public CategoryChild? CategoryChild { get; set; }
 
         public List<ProductColor>? Color { get; set; } = new List<ProductColor>();
-        public List<ProductImage>? Image { get; set; }
+        public List<ProductImage>? Image { get; set; } = new List<ProductImage>();
+
+
     }
 }

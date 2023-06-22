@@ -86,15 +86,15 @@ namespace JZeno.Data
         {
         }
 
-        public DbSet<Product> Product { get; set; }
-        public DbSet<Ship> Ship { get; set; }
-        public DbSet<Bill> Bill { get; set; }
-        public DbSet<Voucher> Voucher { get; set; }
-        public DbSet<Category> Category { get; set; }
-        public DbSet<DetailOrder> DetailOrder { get; set; }
-        public DbSet<ProductColor> ProductColor { get; set; }
-        public DbSet<ProductImage> ProductImage { get; set; }
-        public DbSet<ProductSize> ProductSize { get; set; }
-        public DbSet<CategoryChild> CategoryChild { get; set; }
+        public DbSet<Product>? Product { get; set; }
+        public DbSet<Ship>? Ship { get; set; }
+        public DbSet<Bill>? Bill { get; set; }
+        public DbSet<Voucher>? Voucher { get; set; }
+        public DbSet<Category>? Category { get; set; }
+        public DbSet<DetailOrder>? DetailOrder { get; set; }
+        public DbSet<ProductColor>? ProductColor { get; set; }
+        public DbSet<ProductImage>? ProductImage { get; set; }
+        public DbSet<ProductSize>? ProductSize { get; set; }
+        public DbSet<CategoryChild>? CategoryChild { get; set; }
     }
 }
